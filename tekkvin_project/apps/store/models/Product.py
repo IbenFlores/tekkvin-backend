@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from .Category import Category
 from .Brand import Brand
@@ -19,7 +20,42 @@ class Product(models.Model):
     modified_id = models.IntegerField(null=True, blank=True)
 
     class Meta:
-        db_table = 'products'
+        db_table = "products"
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(sale_price__gte=0),
+                name="product_sale_price_nonnegativo",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(current_stock__gte=0),
+                name="product_stock_nonnegative",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(minimum_stock__gte=0),
+                name="product_min_stock_nonnegative",
+            ),
+        ]
+
+    def clean(self):
+        super().clean()
+        errors = {}
+
+        if self.name is not None and not self.name.strip():
+            errors["name"] = "El nombre del producto no puede estar vacío."
+
+        if self.sale_price is not None and self.sale_price < 0:
+            errors["sale_price"] = "El precio no puede ser negativo."
+
+        if self.current_stock is not None and self.current_stock < 0:
+            errors["current_stock"] = "El stock no puede ser negativo."
+
+        if self.minimum_stock is not None and self.minimum_stock < 0:
+            errors["minimum_stock"] = (
+                "El stock mínimo no puede ser negativo."
+            )
+
+        if errors:
+            raise ValidationError(errors)
 
     def __str__(self):
         return str(self.name)
