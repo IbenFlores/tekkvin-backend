@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from .Cart import Cart
 from .Product import Product
@@ -13,4 +14,18 @@ class CartItem(models.Model):
     modified_id = models.IntegerField(null=True, blank=True)
 
     class Meta:
-        db_table = 'cart_items'
+        db_table = "cart_items"
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(quantity__gt=0),
+                name="cart_item_quantity_positive",
+            ),
+        ]
+
+    def clean(self):
+        super().clean()
+
+        if self.quantity is not None and self.quantity <= 0:
+            raise ValidationError({
+                "quantity": "La cantidad debe ser mayor que cero."
+            })
