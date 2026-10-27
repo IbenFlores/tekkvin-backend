@@ -11,14 +11,23 @@ from .models.Order import Order
 from .models.OrderItem import OrderItem
 from .models.Sale import Sale
 
-admin.site.register(Category)
-admin.site.register(Brand)
-admin.site.register(Product)
-admin.site.register(Supplier)
-admin.site.register(Customer)
-admin.site.register(Cart)
-admin.site.register(CartItem)
-admin.site.register(ProductSupplier)
-admin.site.register(Order)
-admin.site.register(OrderItem)
-admin.site.register(Sale)
+class AuditAdmin(admin.ModelAdmin):
+    exclude = ('created_id', 'modified_id')
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            obj.created_id = request.user.id
+        obj.modified_id = request.user.id
+        super().save_model(request, obj, form, change)
+
+admin.site.register(Category, AuditAdmin)
+admin.site.register(Brand, AuditAdmin)
+admin.site.register(Product, AuditAdmin)
+admin.site.register(Supplier, AuditAdmin)
+admin.site.register(Customer, AuditAdmin)
+admin.site.register(Cart, AuditAdmin)
+admin.site.register(CartItem, AuditAdmin)
+admin.site.register(ProductSupplier, AuditAdmin)
+admin.site.register(Order, AuditAdmin)
+admin.site.register(OrderItem, AuditAdmin)
+admin.site.register(Sale, AuditAdmin)

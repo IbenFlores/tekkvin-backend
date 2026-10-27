@@ -7,7 +7,7 @@ class Category(models.Model):
     status = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True, null=True, blank=True)
-    create_id = models.IntegerField()
+    created_id = models.IntegerField()
     modified_id = models.IntegerField(null=True, blank=True)
 
     class Meta:
