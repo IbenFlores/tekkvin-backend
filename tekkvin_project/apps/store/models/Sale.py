@@ -11,6 +11,10 @@ class Sale(models.Model):
     tax_base = models.DecimalField(max_digits=12, decimal_places=2)
     tax_amount = models.DecimalField(max_digits=12, decimal_places=2)
     total_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    modified = models.DateTimeField(auto_now=True, null=True, blank=True)
+    created_id = models.IntegerField(null=True, blank=True)
+    modified_id = models.IntegerField(null=True, blank=True)
 
     class Meta:
         db_table = 'sale'
