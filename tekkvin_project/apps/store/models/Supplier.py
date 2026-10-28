@@ -3,7 +3,7 @@ from django.db import models
 class Supplier(models.Model):
     company_name = models.TextField(null=True, blank=True)
     tax_id = models.TextField(unique=True, null=True, blank=True)
-    contact_email = models.TextField(null=True, blank=True)
+    contact_email = models.EmailField(max_length=254, null=True, blank=True)
     phone = models.TextField(null=True, blank=True)
     status = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
