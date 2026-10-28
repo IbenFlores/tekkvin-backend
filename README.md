@@ -1,7 +1,5 @@
 # TEKKVIN Backend
 
-**API REST para una tienda en línea de productos tecnológicos**
-
 ---
 
 ## Contenido
@@ -18,7 +16,6 @@
 | | |
 |---|---|
 | **Título** | TEKKVIN Backend |
-| **Siglas** | TEKKVIN <!-- Completar el significado de las siglas --> |
 | **Repositorio** | [IbenFlores/tekkvin-backend](https://github.com/IbenFlores/tekkvin-backend) |
 | **Rama principal** | `master` |
 | **Stack** | Python · Django 6.1 · Django REST Framework · Supabase |
