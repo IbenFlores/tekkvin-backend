@@ -409,48 +409,33 @@ Se listan únicamente los commits más importantes de la rama principal, en orde
 
 ### Inicialización del backend TEKKVIN
 
-*iben polanco*
-
 Creación del proyecto Django y de la app `store`, con los 11 modelos del dominio, la migración inicial y el registro de los modelos en el panel de administración.
 
-![Captura: Inicialización del backend](docs/capturas/captura-inicializacion.png)
 
 ---
 
 ### Conexión a Supabase
 
-*Iben Flores*
-
 Conexión del proyecto a la base de datos en Supabase mediante variables de entorno, con nuevas migraciones y ajustes en los modelos y en el panel de administración.
 
-![Captura: Conexión a Supabase](docs/capturas/captura-supabase.png)
 
 ---
 
 ### Carrito de compras y pedidos
 
-*Lucia Luna*
-
 Endpoints para gestionar el carrito de compras y los pedidos, con control de stock (descuento al crear el pedido y reposición al cancelarlo) y pruebas del flujo de compra.
 
-![Captura: Carrito de compras y pedidos](docs/capturas/pedido-detalle.png)
 
 ---
 
 ### Autenticación y catálogo de productos
 
-*Cinthia Blanco*
-
 Registro e inicio de sesión de usuarios, y listado y detalle de productos con filtros por categoría y marca, junto con sus pruebas unitarias.
 
-![Captura: Autenticación y catálogo de productos](docs/capturas/captura-autenticacion-catalogo.png)
 
 ---
 
 ### Validaciones de datos y mejoras del administrador
 
-*Lucia Luna*
-
 Validaciones en los modelos para precios, stock, cantidades, importes y correos electrónicos, restricciones `CHECK` en la base de datos y mejoras en el panel de administración, como el filtro por estado.
 
-![Captura: Validaciones de datos y mejoras del administrador](docs/capturas/captura-validaciones.png)
