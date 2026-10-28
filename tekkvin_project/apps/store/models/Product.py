@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import Q
 from .Category import Category
 from .Brand import Brand
 
@@ -23,15 +24,15 @@ class Product(models.Model):
         db_table = "products"
         constraints = [
             models.CheckConstraint(
-                condition=models.Q(sale_price__gte=0),
-                name="product_sale_price_nonnegativo",
+                condition=Q(sale_price__gte=0) | Q(sale_price__isnull=True),
+                name="product_sale_price_nonnegative",
             ),
             models.CheckConstraint(
-                condition=models.Q(current_stock__gte=0),
+                condition=Q(current_stock__gte=0) | Q(current_stock__isnull=True),
                 name="product_stock_nonnegative",
             ),
             models.CheckConstraint(
-                condition=models.Q(minimum_stock__gte=0),
+                condition=Q(minimum_stock__gte=0) | Q(minimum_stock__isnull=True),
                 name="product_min_stock_nonnegative",
             ),
         ]
