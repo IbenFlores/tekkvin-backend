@@ -22,7 +22,6 @@
 | **Repositorio** | [IbenFlores/tekkvin-backend](https://github.com/IbenFlores/tekkvin-backend) |
 | **Rama principal** | `master` |
 | **Stack** | Python · Django 6.1 · Django REST Framework · Supabase |
-| **Idioma / zona horaria** | `es-PE` · `America/Lima` |
 
 ### Participantes
 
@@ -244,12 +243,6 @@ python manage.py runserver
 
 La API queda disponible en `http://127.0.0.1:8000/api/`.
 
-#### Prueba de ejecución
-
-Consulta del pedido `1` desde el navegador (`GET http://127.0.0.1:8000/api/pedidos/1/`). La API devuelve el pedido en estado `registrado`, con sus dos ítems y el total calculado (S/ 1998.99 = 1 × 1299.99 + 2 × 349.50).
-
-![Prueba de ejecución: GET /api/pedidos/1/](docs/capturas/pedido-detalle.png)
-
 ### Pruebas
 
 ```bash
@@ -265,7 +258,7 @@ python manage.py test apps.store
 
 ## 2. Modelo Entidad-Relación (DER)
 
-![Modelo Entidad-Relación de TEKKVIN](docs/der.svg)
+![Modelo Entidad-Relación de TEKKVIN](tekkvin_modelo_logico.svg)
 
 ---
 
