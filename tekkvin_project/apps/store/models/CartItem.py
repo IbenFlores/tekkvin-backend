@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
 from django.db import models
 from .Cart import Cart
 from .Product import Product
@@ -6,7 +7,7 @@ from .Product import Product
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True, blank=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
-    quantity = models.IntegerField(null=True, blank=True)
+    quantity = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(1)],)
     status = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True, null=True, blank=True)
