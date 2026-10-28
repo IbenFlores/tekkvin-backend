@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import Q
+from django.core.validators import MinValueValidator
 from .Order import Order
 
 class Sale(models.Model):
@@ -8,9 +10,23 @@ class Sale(models.Model):
     receipt_number = models.CharField(max_length=255, unique=True)
     payment_status = models.CharField(max_length=255)
     payment_method = models.CharField(max_length=255)
-    tax_base = models.DecimalField(max_digits=12, decimal_places=2)
-    tax_amount = models.DecimalField(max_digits=12, decimal_places=2)
-    total_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    tax_base = models.DecimalField(max_digits=12, decimal_places=2,  validators=[MinValueValidator(0)])
+    tax_amount = models.DecimalField(max_digits=12, decimal_places=2,  validators=[MinValueValidator(0)]) 
+    total_amount = models.DecimalField(max_digits=12, decimal_places=2,  validators=[MinValueValidator(0)])
 
     class Meta:
         db_table = 'sale'
+        constraints = [
+            models.CheckConstraint(
+                condition=Q(tax_base__gte=0),
+                name="sale_tax_base_nonnegative"
+            ),
+            models.CheckConstraint(
+                condition=Q(tax_amount__gte=0),
+                name="sale_tax_amount_nonnegative"
+            ),
+            models.CheckConstraint(
+                condition=Q(total_amount__gte=0),
+                name="sale_total_nonnegative"
+            ),
+        ]
