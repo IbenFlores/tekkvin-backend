@@ -1,4 +1,8 @@
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -16,6 +20,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.store',
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -49,8 +55,13 @@ WSGI_APPLICATION = 'tekkvin_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': os.getenv('SUPABASE_DATABASE_HOST'),
+        'PORT': os.getenv('SUPABASE_DATABASE_PORT'),
+        'NAME': os.getenv('SUPABASE_DATABASE_NAME'),
+        'USER': os.getenv('SUPABASE_DATABASE_USER'),
+        'PASSWORD': os.getenv('SUPABASE_DATABASE_PASSWORD'),
+        'OPTIONS': {'sslmode': 'require'},
     }
 }
 

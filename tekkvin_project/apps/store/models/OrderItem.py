@@ -1,3 +1,4 @@
+
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -7,9 +8,13 @@ from .Product import Product
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField( validators=[MinValueValidator(1)])
+    quantity = models.IntegerField(validators=[MinValueValidator(1)])
     unit_price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)],)
     subtotal = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(0)],)
+    created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    modified = models.DateTimeField(auto_now=True, null=True, blank=True)
+    created_id = models.IntegerField(null=True, blank=True)
+    modified_id = models.IntegerField(null=True, blank=True)
 
     class Meta:
         db_table = "order_item"
@@ -36,7 +41,9 @@ class OrderItem(models.Model):
             errors["quantity"] = "La cantidad debe ser mayor que cero."
 
         if self.unit_price is not None and self.unit_price < 0:
-            errors["unit_price"] = "El precio unitario no puede ser negativo."
+            errors["unit_price"] = (
+                "El precio unitario no puede ser negativo."
+            )
 
         if self.subtotal is not None and self.subtotal < 0:
             errors["subtotal"] = "El subtotal no puede ser negativo."
