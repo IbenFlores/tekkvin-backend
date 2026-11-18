@@ -6,8 +6,8 @@ from .models import Brand, Category, Customer, Product
 
 class StoreApiTests(APITestCase):
 	def setUp(self):
-		self.category = Category.objects.create(name='Audio', create_id=1)
-		self.brand = Brand.objects.create(name='Acme', create_id=1)
+		self.category = Category.objects.create(name='Audio', created_id=1)
+		self.brand = Brand.objects.create(name='Acme', created_id=1)
 
 	def test_registration_creates_account_customer_and_token(self):
 		response = self.client.post(
@@ -48,9 +48,9 @@ class StoreApiTests(APITestCase):
 			category=self.category,
 			brand=self.brand,
 			is_active=True,
-			create_id=1,
+			created_id=1,
 		)
-		Product.objects.create(name='Inactive', is_active=False, create_id=1)
+		Product.objects.create(name='Inactive', is_active=False, created_id=1)
 
 		response = self.client.get(
 			'/api/products/',
@@ -61,7 +61,7 @@ class StoreApiTests(APITestCase):
 		self.assertEqual([item['id'] for item in response.data], [matching_product.pk])
 
 	def test_product_detail_returns_active_product(self):
-		product = Product.objects.create(name='Headphones', is_active=True, create_id=1)
+		product = Product.objects.create(name='Headphones', is_active=True, created_id=1)
 
 		response = self.client.get(f'/api/products/{product.pk}/')
 

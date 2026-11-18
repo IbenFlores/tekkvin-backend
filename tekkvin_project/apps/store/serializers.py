@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, get_user_model, password_validatio
 from django.db import transaction
 from rest_framework import serializers
 
+from apps.users.models import Role
 from .models import Brand, Category, Customer, Product
 
 User = get_user_model()
@@ -15,8 +16,6 @@ class RegisterSerializer(serializers.Serializer):
 
     def validate_email(self, value):
         value = value.strip().lower()
-        if User.objects.filter(username__iexact=value).exists():
-            raise serializers.ValidationError('Ya existe una cuenta con este correo.')
         if User.objects.filter(email__iexact=value).exists():
             raise serializers.ValidationError('Ya existe una cuenta con este correo.')
         if Customer.objects.filter(email__iexact=value).exists():
@@ -30,14 +29,19 @@ class RegisterSerializer(serializers.Serializer):
     @transaction.atomic
     def create(self, validated_data):
         password = validated_data.pop('password')
+        cliente_role, _ = Role.objects.get_or_create(
+            name='Cliente',
+            defaults={'description': 'Cliente registrado de la tienda'},
+        )
         user = User.objects.create_user(
-            username=validated_data['email'],
             email=validated_data['email'],
             password=password,
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
+            role=cliente_role,
         )
         Customer.objects.create(
+            user=user,
             first_name=user.first_name,
             last_name=user.last_name,
             email=user.email,

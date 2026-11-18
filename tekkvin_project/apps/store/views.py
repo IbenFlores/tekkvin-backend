@@ -15,8 +15,15 @@ class RegisterView(APIView):
 		serializer.is_valid(raise_exception=True)
 		user = serializer.save()
 		token, _ = Token.objects.get_or_create(user=user)
+		customer = getattr(user, 'customer', None)
 		return Response(
-			{'token': token.key, 'user_id': user.pk, 'email': user.email},
+			{
+				'token': token.key,
+				'user_id': user.pk,
+				'customer_id': customer.pk if customer else None,
+				'email': user.email,
+				'role': user.role.name if user.role else None,
+			},
 			status=status.HTTP_201_CREATED,
 		)
 
@@ -32,7 +39,16 @@ class LoginView(APIView):
 		serializer.is_valid(raise_exception=True)
 		user = serializer.validated_data['user']
 		token, _ = Token.objects.get_or_create(user=user)
-		return Response({'token': token.key, 'user_id': user.pk, 'email': user.email})
+		customer = getattr(user, 'customer', None)
+		return Response(
+			{
+				'token': token.key,
+				'user_id': user.pk,
+				'customer_id': customer.pk if customer else None,
+				'email': user.email,
+				'role': user.role.name if user.role else None,
+			}
+		)
 
 
 class ProductListView(generics.ListAPIView):
