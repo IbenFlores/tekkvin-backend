@@ -20,7 +20,7 @@ class ShoppingApiTests(TestCase):
             sale_price=Decimal("20.00"),
             current_stock=5,
             is_active=True,
-            create_id=0,
+            created_id=0,
         )
 
     def send(self, method, url, data=None):
@@ -70,7 +70,6 @@ class ShoppingApiTests(TestCase):
         self.product.refresh_from_db()
         self.assertEqual(self.product.current_stock, 3)
 
-        # Un carrito confirmado no puede generar otro pedido.
         response = self.send(
             "post",
             "/api/pedidos/",
@@ -92,7 +91,6 @@ class ShoppingApiTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        # No debe devolver el stock por segunda vez.
         response = self.send(
             "patch",
             f"/api/pedidos/{order_id}/cancelar/",
