@@ -42,6 +42,34 @@ class StoreApiTests(APITestCase):
 		self.assertEqual(response.status_code, 200)
 		self.assertTrue(response.data['token'])
 
+	def test_protected_profile_and_logout_flow(self):
+		user = get_user_model().objects.create_user(
+			username='ada@example.com',
+			email='ada@example.com',
+			password='A-long-and-unique-password-938!',
+		)
+
+		unauthenticated_response = self.client.get('/api/auth/profile/')
+		self.assertEqual(unauthenticated_response.status_code, 401)
+
+		login_response = self.client.post(
+			'/api/auth/login/',
+			{'email': user.email, 'password': 'A-long-and-unique-password-938!'},
+			format='json',
+		)
+		token = login_response.data['token']
+		self.client.credentials(HTTP_AUTHORIZATION=f'Token {token}')
+
+		profile_response = self.client.get('/api/auth/profile/')
+		self.assertEqual(profile_response.status_code, 200)
+		self.assertEqual(profile_response.data['email'], 'ada@example.com')
+
+		logout_response = self.client.post('/api/auth/logout/')
+		self.assertEqual(logout_response.status_code, 200)
+
+		after_logout_response = self.client.get('/api/auth/profile/')
+		self.assertEqual(after_logout_response.status_code, 401)
+
 	def test_product_list_filters_by_category_and_brand(self):
 		matching_product = Product.objects.create(
 			name='Headphones',

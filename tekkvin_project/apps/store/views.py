@@ -1,4 +1,5 @@
 from rest_framework import generics, permissions, status
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -15,15 +16,8 @@ class RegisterView(APIView):
 		serializer.is_valid(raise_exception=True)
 		user = serializer.save()
 		token, _ = Token.objects.get_or_create(user=user)
-		customer = getattr(user, 'customer', None)
 		return Response(
-			{
-				'token': token.key,
-				'user_id': user.pk,
-				'customer_id': customer.pk if customer else None,
-				'email': user.email,
-				'role': user.role.name if user.role else None,
-			},
+			{'token': token.key, 'user_id': user.pk, 'email': user.email},
 			status=status.HTTP_201_CREATED,
 		)
 
@@ -39,15 +33,37 @@ class LoginView(APIView):
 		serializer.is_valid(raise_exception=True)
 		user = serializer.validated_data['user']
 		token, _ = Token.objects.get_or_create(user=user)
-		customer = getattr(user, 'customer', None)
+		return Response({'token': token.key, 'user_id': user.pk, 'email': user.email})
+
+
+class LogoutView(APIView):
+	authentication_classes = (TokenAuthentication,)
+	permission_classes = (permissions.IsAuthenticated,)
+
+	def post(self, request):
+		Token.objects.filter(user=request.user).delete()
+		return Response(
+			{'detail': 'Sesión cerrada correctamente.'},
+			status=status.HTTP_200_OK,
+		)
+
+
+class ProfileView(APIView):
+	authentication_classes = (TokenAuthentication,)
+	permission_classes = (permissions.IsAuthenticated,)
+
+	def get(self, request):
+		customer = getattr(request.user, 'customer', None)
 		return Response(
 			{
-				'token': token.key,
-				'user_id': user.pk,
+				'user_id': request.user.pk,
 				'customer_id': customer.pk if customer else None,
-				'email': user.email,
-				'role': user.role.name if user.role else None,
-			}
+				'email': request.user.email,
+				'first_name': request.user.first_name,
+				'last_name': request.user.last_name,
+				'role': request.user.role.name if request.user.role else None,
+			},
+			status=status.HTTP_200_OK,
 		)
 
 
